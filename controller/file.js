@@ -4,5 +4,5 @@ exports.file = async (req, res) => {
   const filePath = `${path.join(__dirname, '../data/')}${req.params.id}`
   fs.existsSync(filePath)
     ? res.sendFile(filePath)
-    : res.json({ err: 'file not found' })
+    : res.status(404).json({ err: 'file not found' })
 }

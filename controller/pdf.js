@@ -1,15 +1,15 @@
 const changePdf = require('change-pdf')
-const { save } = require('../util/store')
+const { savePdf } = require('../util/store')
 const { PORT, IP } = require('../util/config')
 const path = require('path')
-const fs = require('fs')
 const hummus = require('hummus')
-const { setDelete, splitVerify } = require('../util/utils')
+const { setDelete, splitVerify, qualityParams } = require('../util/utils')
 
-exports.compress = async (req, res) => {
-  await save(req, res, err => {
-    if (err) return res.json({ err })
-    if (req.file == undefined) return res.json({ err: 'no file is uploaded' })
+exports.compress = (req, res) => {
+  savePdf(req, res, err => {
+    if (err) return res.status(400).json({ err })
+    if (req.file == undefined)
+      return res.status(400).json({ err: 'no file is uploaded' })
 
     const { destination, filename } = req.file
     changePdf
@@ -17,21 +17,24 @@ exports.compress = async (req, res) => {
         req.file.path,
         path.join(destination, `comped${filename}`),
         // can recieve the size as param ['screen', 'ebook','printer','prepress']
-        req.params.size
+        qualityParams[req.params.size].png
       )
       .then(() => {
         setDelete(req.file.path, path.join(destination, `comped${filename}`))
       })
-    return res.json({ link: `${IP}:${PORT}/file/comped${filename}` })
+    return res
+      .status(200)
+      .json({ link: `${IP}:${PORT}/file/comped${filename}` })
   })
 }
 
-exports.split = async (req, res) => {
+exports.split = (req, res) => {
   const params = { from: req.params.from - 1, to: req.params.to - 1, res }
 
-  await save(req, res, err => {
-    if (err) return res.json({ err })
-    if (req.file == undefined) return res.json({ err: 'no file is uploaded' })
+  savePdf(req, res, err => {
+    if (err) return res.status(400).json({ err })
+    if (req.file == undefined)
+      return res.status(400).json({ err: 'no file is uploaded' })
 
     const { destination, filename } = req.file
     const inStream = new hummus.PDFRStreamForFile(req.file.path)
@@ -41,7 +44,7 @@ exports.split = async (req, res) => {
     if (splitVerify(params)) {
       inStream.close()
       setDelete(req.file.path, null)
-      return res.status(500).json({ err: splitVerify(params) })
+      return res.status(400).json({ err: splitVerify(params) })
     }
 
     let pdfWriter = hummus.createWriter(
@@ -59,9 +62,11 @@ exports.split = async (req, res) => {
 
     setDelete(req.file.path, path.join(destination, `splited-${filename}`))
 
-    return res.json({ link: `${IP}:${PORT}/file/splited-${filename}` })
+    return res
+      .status(400)
+      .json({ link: `${IP}:${PORT}/file/splited-${filename}` })
   })
 }
-exports.changeToImage = async (req, res) => {
+exports.changeToImage = (req, res) => {
   res.json({ endpoint: 'changeToImage' })
 }
