@@ -4,7 +4,7 @@ const { PORT, IP } = require('../util/config')
 const path = require('path')
 const fs = require('fs')
 const hummus = require('hummus')
-const { setDelete } = require('../util/utils')
+const { setDelete, splitVerify } = require('../util/utils')
 
 exports.compress = async (req, res) => {
   await save(req, res, err => {
@@ -27,7 +27,8 @@ exports.compress = async (req, res) => {
 }
 
 exports.split = async (req, res) => {
-  const params = { from: req.params.from - 1, to: req.params.to - 1 }
+  const params = { from: req.params.from - 1, to: req.params.to - 1, res }
+
   await save(req, res, err => {
     if (err) return res.json({ err })
     if (req.file == undefined) return res.json({ err: 'no file is uploaded' })
@@ -35,11 +36,19 @@ exports.split = async (req, res) => {
     const { destination, filename } = req.file
     const inStream = new hummus.PDFRStreamForFile(req.file.path)
     let pdfReader = hummus.createReader(inStream)
+    params.pagesCount = pdfReader.getPagesCount()
+
+    if (splitVerify(params)) {
+      inStream.close()
+      setDelete(req.file.path, null)
+      return res.status(500).json({ err: splitVerify(params) })
+    }
+
     let pdfWriter = hummus.createWriter(
       path.join(destination, `splited-${filename}`)
     )
 
-    for (let i = 0; i < pdfReader.getPagesCount(); i++) {
+    for (let i = 0; i < params.pagesCount; i++) {
       if (i >= params.from && i <= params.to) {
         pdfWriter.createPDFCopyingContext(pdfReader).appendPDFPageFromPDF(i)
       }
