@@ -6,12 +6,14 @@ const config = require('./util/config')
 
 const pdfRoutes = require('./routes/pdf')
 const fileRoutes = require('./routes/file')
+const imageRoutes = require('./routes/image')
 
 app.use(cors())
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use('/image', imageRoutes)
 app.use('/file', fileRoutes)
 app.use('/pdf', pdfRoutes)
 
