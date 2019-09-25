@@ -26,11 +26,13 @@ exports.compress = (req, res) => {
         image.quality(qualityParams[size].jpg).write(path.join(destination, newFileName))
       })
       .then(() => {
+        setDelete(req.file.path, path.join(destination, newFileName))
+        //setdelete
         return res.status(200).json({ link: `${IP}:${PORT}/file/comped${filename}` })
       })
+      .catch(err => console.log(err))
   })
 }
-
 exports.changeDocType = (req, res) => {
   const { to } = req.params
   saveImg(req, res, err => {
@@ -45,17 +47,19 @@ exports.changeDocType = (req, res) => {
         image.quality(100).write(path.join(destination, newFileName))
       })
       .then(() => {
+        setDelete(req.file.path, path.join(destination, newFileName))
         return res.status(200).json({
           link: `${IP}:${PORT}/file/${newFileName}`
         })
       })
+      .catch(err => console.log(err))
   })
 }
-
 exports.resize = (req, res) => {
   saveImg(req, res, err => {
     if (err) return res.json({ err })
     if (req.file == undefined) return res.status(400).json({ err: 'no file is uploaded' })
+    //setdelete
     const { destination, filename } = req.file
 
     Jimp.read(req.file.path)
@@ -76,6 +80,7 @@ exports.resize = (req, res) => {
           .write(path.join(destination, `resized_${filename}`))
       })
       .then(() => {
+        setDelete(req.file.path, path.join(destination, `resized_${filename}`))
         return res.status(200).json({ link: `${IP}:${PORT}/file/resized_${filename}` })
       })
       .catch(err => console.log(err))

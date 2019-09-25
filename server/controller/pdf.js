@@ -8,8 +8,7 @@ const { setDelete, splitVerify, qualityParams } = require('../util/utils')
 exports.compress = (req, res) => {
   savePdf(req, res, err => {
     if (err) return res.status(400).json({ err })
-    if (req.file == undefined)
-      return res.status(400).json({ err: 'no file is uploaded' })
+    if (req.file == undefined) return res.status(400).json({ err: 'no file is uploaded' })
 
     const { destination, filename } = req.file
     changePdf
@@ -22,19 +21,16 @@ exports.compress = (req, res) => {
       .then(() => {
         setDelete(req.file.path, path.join(destination, `comped${filename}`))
       })
-    return res
-      .status(200)
-      .json({ link: `${IP}:${PORT}/file/comped${filename}` })
+      .catch(err => console.log(err))
+    return res.status(200).json({ link: `${IP}:${PORT}/file/comped${filename}` })
   })
 }
-
 exports.split = (req, res) => {
   const params = { from: req.params.from - 1, to: req.params.to - 1, res }
 
   savePdf(req, res, err => {
     if (err) return res.status(400).json({ err })
-    if (req.file == undefined)
-      return res.status(400).json({ err: 'no file is uploaded' })
+    if (req.file == undefined) return res.status(400).json({ err: 'no file is uploaded' })
 
     const { destination, filename } = req.file
     const inStream = new hummus.PDFRStreamForFile(req.file.path)
@@ -47,9 +43,7 @@ exports.split = (req, res) => {
       return res.status(400).json({ err: splitVerify(params) })
     }
 
-    let pdfWriter = hummus.createWriter(
-      path.join(destination, `splited-${filename}`)
-    )
+    let pdfWriter = hummus.createWriter(path.join(destination, `splited-${filename}`))
 
     for (let i = 0; i < params.pagesCount; i++) {
       if (i >= params.from && i <= params.to) {
@@ -62,9 +56,7 @@ exports.split = (req, res) => {
 
     setDelete(req.file.path, path.join(destination, `splited-${filename}`))
 
-    return res
-      .status(400)
-      .json({ link: `${IP}:${PORT}/file/splited-${filename}` })
+    return res.status(400).json({ link: `${IP}:${PORT}/file/splited-${filename}` })
   })
 }
 exports.changeToImage = (req, res) => {

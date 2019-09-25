@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "docker": "docker run -it -p 5000:5000 --rm --name node nodeserver:fastcomp"
   },
   "repository": {
     "type": "git",
