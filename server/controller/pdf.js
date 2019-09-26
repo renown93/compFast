@@ -8,7 +8,10 @@ const { setDelete, splitVerify, qualityParams } = require('../util/utils')
 exports.compress = (req, res) => {
   savePdf(req, res, err => {
     if (err) return res.status(400).json({ err })
-    if (req.file == undefined) return res.status(400).json({ err: 'no file is uploaded' })
+    if (req.file == undefined)
+      return res.status(400).json({ err: 'no file is uploaded' }), setDelete(req.file.path, null)
+    if (!['max', 'normal', 'min'].includes(req.params.size))
+      return res.status(400).json({ err: 'wrong compress value' }), setDelete(req.file.path, null)
 
     const { destination, filename } = req.file
     changePdf

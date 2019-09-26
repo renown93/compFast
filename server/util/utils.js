@@ -7,14 +7,15 @@ exports.setDelete = (original, created) => {
     }
   })
   // delete the compressed file after an hour.
-  if (created != false) {
+
+  if (created !== null) {
     setTimeout(() => {
       fs.unlink(created, err => {
         if (err) {
           console.log(err)
         }
       })
-    }, 100000)
+    }, 10000)
   }
 }
 
