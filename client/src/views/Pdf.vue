@@ -1,10 +1,16 @@
 <template>
-  <div>pdf</div>
+  <div>
+    <FileUploader />
+  </div>
 </template>
 
 <script>
+import FileUploader from "@/components/FileUploader";
 export default {
-  name: "Pdf"
+  name: "Pdf",
+  components: {
+    FileUploader
+  }
 };
 </script>
 

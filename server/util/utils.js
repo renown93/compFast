@@ -15,7 +15,7 @@ exports.setDelete = (original, created) => {
           console.log(err)
         }
       })
-    }, 10000)
+    }, 1000000)
   }
 }
 

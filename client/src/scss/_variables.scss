@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather:300&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:700&display=swap');
 // colors
 $main-color: #7dd86e;
 $main-color-selected: #49873f;
@@ -5,4 +7,7 @@ $main-color-faded: #7cd86e8c;
 //text
 $main-text-color: #1f4248;
 $secondary-text-color: #111010;
-$main-text-color-faded: #707070;
+$main-text-color-faded: #939292;
+
+$main-font: 'Montserrat', sans-serif;
+$secondary-font: 'Merriweather', serif;
