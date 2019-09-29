@@ -7,10 +7,18 @@
 
     <!-- Styled fake form that invokes actual form's functions. -->
     <div class="visibleForm card">
-      <h5>{{fileName}}</h5>
+      <div class="file-name">
+        <h5>{{fileName}}</h5>
+        <div v-if="ifFileUploaded" @click="handleFileDelete" class="clear-icon">
+          <ClearIcon fillColor="#d2222d" />
+        </div>
+      </div>
       <button @click="handleClick" class="upload-button card">
         <UploadIcon fillColor="#FFFFFF" :size="30" />
       </button>
+    </div>
+    <div v-bind="fileType" v-if="errorCheck" class="warning">
+      <p :key="err" v-for="err in fileType">*{{fileType.err}}</p>
     </div>
     <!-- / -->
   </div>
@@ -20,24 +28,25 @@
 import { mapGetters, mapActions } from "vuex";
 import axios from "axios";
 import UploadIcon from "vue-material-design-icons/CloudUpload.vue";
+import ClearIcon from "vue-material-design-icons/Close.vue";
 
 export default {
   name: "FileUploader",
-  components: { UploadIcon },
+  components: { UploadIcon, ClearIcon },
   methods: {
-    ...mapActions(["fileUpload", "pushError"]),
+    ...mapActions(["fileUpload", "pushError", "deleteFile", "mutateParam"]),
     handleFileUpload() {
       this.fileUpload({
         fileName: this.$refs.actualForm.files[0].name,
         formObject: this.$refs.actualForm.files[0]
       });
-      console.log(this.fileType);
-      if (!this.fileType.err) {
-        this.$router.push(this.fileType);
-      } else {
-        this.pushError(this.fileType.err);
-      }
 
+      if (!this.fileType.err) this.$router.push(this.fileType);
+      else this.pushError(this.fileType.err);
+
+      // each operation mutates a parameter to the state in order to -
+      // save route information of the backend API
+      this.mutateParam({ value: this.fileType, index: 0 });
       //   let formData = new FormData();
       //   formData.append("newFile", this.form);
       //   axios
@@ -49,33 +58,75 @@ export default {
     },
     handleClick() {
       this.$refs.actualForm.click();
+    },
+    handleFileDelete() {
+      this.$router.push("/");
+      this.deleteFile();
     }
   },
   computed: {
-    ...mapGetters(["fileName", "fileType"])
+    ...mapGetters(["fileName", "fileType"]),
+    errorCheck() {
+      return (
+        this.fileName !== "Select a document to start" && this.fileType.err
+      );
+    },
+    ifFileUploaded() {
+      return this.fileName !== "Select a document to start";
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/scss/_variables";
+@import "@/scss/_mixins";
 
 .container {
   margin: 0 auto;
   margin-top: 8rem;
-  width: 40%;
+  width: 100%;
   min-width: 30rem;
   font-family: $secondary-font;
-  color: $main-text-color-faded;
-  font-size: 1.7rem;
+  color: $info-text-color;
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include for-phone-only {
+    margin-top: 3rem;
+    min-width: 20rem;
+    font-size: 0.7rem;
+  }
 }
 .visibleForm {
   display: flex;
   align-items: center;
+  justify-items: space-around;
   padding: 0.21rem;
   padding-left: 3rem;
   height: 3.5rem;
   border-radius: 2rem;
+  margin: 0 auto;
+  min-width: 35%;
+  @include for-phone-only {
+    height: 2.5rem;
+    min-width: 15rem;
+    // margin-left: 5px;
+  }
+  .file-name {
+    display: flex;
+    .clear-icon {
+      margin-left: 2px;
+      visibility: hidden;
+    }
+    &:hover {
+      .clear-icon {
+        margin-left: 2px;
+        visibility: visible;
+      }
+    }
+  }
 }
 .upload-button {
   &:focus {
@@ -89,5 +140,14 @@ export default {
   border-radius: 2rem;
   background-color: $main-color;
   cursor: pointer;
+  @include for-phone-only {
+    width: 4rem;
+  }
+}
+.warning {
+  margin-top: 1rem;
+  p {
+    color: $warning-text-color;
+  }
 }
 </style>

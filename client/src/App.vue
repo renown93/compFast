@@ -2,7 +2,9 @@
   <div id="app">
     <div class="nav card-2">
       <router-link to="/">
-        <Logo />
+        <div class="logo">
+          <Logo />
+        </div>
       </router-link>
       <div class="icon">
         <router-link to="/about">
@@ -25,7 +27,16 @@ export default {
 <style lang="scss">
 @import "@/scss/main";
 @import "@/scss/_variables";
-
+@import "@/scss/_mixins";
+#app {
+  margin: 0, auto;
+}
+.logo {
+  margin-left: 1rem;
+  @include for-phone-only {
+    width: 7rem;
+  }
+}
 .nav {
   width: 100%;
   height: 10%;
@@ -34,9 +45,11 @@ export default {
   align-items: center;
   padding-top: 1rem;
   padding-bottom: 0.5rem;
-  padding-left: 1rem;
 }
 .icon {
+  @include for-phone-only {
+    transform: scale(0.7);
+  }
   margin-left: auto;
   margin-right: 1rem;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.194));
