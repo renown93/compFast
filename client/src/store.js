@@ -6,11 +6,11 @@ import operations from "@/utils/operations.js"
 Vue.use(Vuex)
 const {
   generateFileName,
-  generateChildOperations,
   generateOperations,
   findFileType,
   generateInitialOperations,
-  json
+  json,
+  isFileValid
 } = functions
 
 export default new Vuex.Store({
@@ -19,7 +19,7 @@ export default new Vuex.Store({
     fileType: "",
     formObject: {},
     err: [],
-    params: ["", "", "", "", ""],
+    params: ["", "", "dnm", "", ""],
     operations,
     childOperations: []
   },
@@ -51,16 +51,18 @@ export default new Vuex.Store({
   actions: {
     fileUpload({ commit }, { fileName, formObject }) {
       commit("FILE_NAME", fileName)
+      if (!isFileValid(fileName)) return commit("ERROR", ["Unsupported Document Type."])
       commit("FORM_OBJECT", formObject)
       commit("FILE_TYPE", findFileType(fileName))
       commit("MUTATE_PARAMS", { value: findFileType(fileName), index: 0 })
+      commit("ERROR", [])
     },
     pushError({ commit }, err) {
       commit("ERROR", err)
     },
     deleteFile({ commit }) {
       commit("FILE_NAME", "")
-      commit("FORM_OBJECT", null)
+      commit("FORM_OBJECT", {})
       commit("DELETE_PARAMS")
       commit("FILE_TYPE", "")
       commit("ERROR", [])
@@ -81,6 +83,8 @@ export default new Vuex.Store({
     getChildOperations: ({ childOperations }) => childOperations,
     getParams: ({ params }) => params,
     getInitialOperations: ({ operations }) => generateInitialOperations(operations),
-    isReadyToProcess: ({ params }) => !(params[0] && params[1] && params[2] ? true : false)
+    isReadyToProcess: ({ params }) => (params[0] && params[1] && params[2] ? true : false),
+    isFileValid: ({ fileName }) => isFileValid(fileName),
+    err: ({ err }) => err
   }
 })

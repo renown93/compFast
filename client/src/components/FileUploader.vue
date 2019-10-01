@@ -17,10 +17,12 @@
         <UploadIcon fillColor="#FFFFFF" :size="30" />
       </button>
     </div>
-
-    <!-- <div v-bind="fileType" v-if="errorCheck" class="warning">
-      <p :key="err" v-for="err in fileType">*{{fileType.err}}</p>
-    </div>-->
+    <div class="info">
+      <p v-if="getfileName === 'Select a document to start'">* Please Upload The File To Continue.</p>
+    </div>
+    <div v-if="err !== []" class="warning">
+      <p :key="error" v-for="error in err">*{{error}}</p>
+    </div>
     <!-- / -->
   </div>
 </template>
@@ -56,12 +58,12 @@ export default {
       this.$refs.actualForm.click();
     },
     handleFileDelete() {
-      this.$router.push("/");
+      // this.$router.push("/");
       this.deleteFile();
     }
   },
   computed: {
-    ...mapGetters(["getfileName"]),
+    ...mapGetters(["getfileName", "err"]),
     ifFileUploaded() {
       return this.getfileName !== "Select a document to start";
     }
@@ -117,7 +119,19 @@ export default {
   text-align: center;
   color: $warning-text-color;
   font-family: $main-font;
-  margin-top: 1rem;
+  margin: 1rem;
+  @include for-phone-only {
+    font-size: 0.8rem;
+  }
+}
+.info {
+  text-align: center;
+  color: $info-text-color;
+  font-family: $main-font;
+  margin: 1rem;
+  @include for-phone-only {
+    font-size: 0.8rem;
+  }
 }
 // .container {
 //   margin: 0 auto;

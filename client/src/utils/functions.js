@@ -4,7 +4,7 @@ export const findDocType = el => {
   const pdfRE = /.pdf$/
   if (imageRE.test(el)) return "image"
   if (pdfRE.test(el)) return "pdf"
-  return { err: "Unsupported document type." }
+  return "Unsupported document type."
 }
 
 export const reduceOperations = operations => {
@@ -36,13 +36,14 @@ export const generateFileName = (fileName, maxLength) => {
   return fileName
 }
 
-export const generateChildOperations = (fileType, operations, params) => {
+export const generateChildOperations = (operatiosn, params) => {
   return operations[fileType]
 }
 
 export const generateOperations = (fileType, operations) => operations[fileType]
 
 export const findFileType = fileName => findDocType(fileName)
+export const isFileValid = fileName => (findDocType(fileName) === "Unsupported document type." ? false : true)
 
 export const generateInitialOperations = operations =>
   pipe(

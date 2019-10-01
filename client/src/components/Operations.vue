@@ -15,8 +15,9 @@
         @click="handleClick(operation.route,1)"
         :key="i" )
           p {{ operation.name}}
-    
-    
+      .info
+        p(v-if="getParams[0] && !getParams[1]") * Please choose the operation to continue. 
+
       .params-container(v-if='getParams[1]')
         button.button.card( 
           :class='{ button_selected : getParams[operation.pointer] === operation.name }' 
@@ -26,10 +27,17 @@
           p {{operation.name}}
         input.input.card( 
         v-else-if="operation.type === 'input'" 
-        :placeholder="operation.name")
-      
+        :placeholder="operation.name" 
+        :value='getParams[operation.pointer]'
+        :name='operation.pointer' 
+        @input='handleInput')
+      .info
+        p(v-if="checkIfType('resize') ") *Please fill in the size to continue. <br> *You can choose either percentage or width/height. 
+        p(v-else-if="checkIfType('split')") *Please choose the page range to split. 
+        p(v-else-if="checkIfType()") *Please choose the strength of the operation to continue.
+       
       .process-button
-        button.button(:class='{ button_disabled : isReadyToProcess }' ) 
+        button.button(:class='{ button_disabled : !isReadyToProcess }' ) 
           p Process
          
 </template>
@@ -57,6 +65,26 @@ export default {
       "mutateParam",
       "mutateChildOperations"
     ]),
+    handleInput(e) {
+      this.mutateParam({
+        value: e.target.value,
+        index: e.target.name
+      });
+    },
+    checkIfType(param) {
+      if (param === "split") {
+        this.getParams[0] &&
+          this.getParams[1] === param &&
+          !this.getParams[2] &&
+          !this.getParams[3];
+      }
+      if (param)
+        return (
+          this.getParams[0] && this.getParams[1] === param && !this.getParams[2]
+        );
+      return this.getParams[0] && this.getParams[1] && !this.getParams[2];
+    },
+
     handleClick(name, pointer) {
       this.mutateParam({ value: name, index: pointer });
       this.mutateParam({ value: "", index: 2 });
@@ -118,7 +146,7 @@ operation-container {
   margin: auto;
   display: flex;
   width: 65%;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 
   @include for-tablet-landscape-up {
@@ -136,23 +164,31 @@ operation-container {
     &_selected {
       background-color: $main-color-selected;
     }
-    @include for-tablet-landscape-up {
-      font-size: 0.8rem;
+    @include for-tablet-portrait-up {
+      font-size: 1rem;
+      width: 6rem;
     }
   }
   .input {
     text-align: center;
     border-radius: 0.4rem;
     border: 0.2rem solid $main-color;
-    width: 5rem;
-    margin: 0.4rem 0.5rem;
+    width: 4rem;
+    margin: 0.5rem 0.5rem;
     font-size: 0.7rem;
     flex-wrap: wrap;
+    @include for-tablet-portrait-up {
+      padding: 0.4rem;
+      margin: 0.5rem 0.3rem;
+      font-size: 0.8rem;
+      width: 5rem;
+    }
   }
 }
 .process-button {
   display: flex;
   font-size: 1.5rem;
+  margin-top: 2rem;
   .button {
     border-radius: 0.4rem;
     background-color: $main-color;
@@ -164,7 +200,16 @@ operation-container {
     }
   }
 }
-
+.info {
+  text-align: center;
+  color: $info-text-color;
+  font-family: $main-font;
+  font-size: 1rem;
+  margin: 1rem;
+  @include for-phone-only {
+    font-size: 0.8rem;
+  }
+}
 // .params {
 //   width: 100%;
 //   display: flex;
