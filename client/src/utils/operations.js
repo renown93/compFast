@@ -4,27 +4,27 @@ export default {
       name: "Compress",
       route: "compress",
       params: [
-        { name: "max", pointer: 2 },
-        { name: "normal", pointer: 2 },
-        { name: "min", pointer: 2 }
+        { name: "max", pointer: 2, type: "button" },
+        { name: "normal", pointer: 2, type: "button" },
+        { name: "min", pointer: 2, type: "button" }
       ]
     },
     {
       name: "Change Type",
       route: "changeDocType",
       params: [
-        { name: "pdf", pointer: 2 },
-        { name: "png", pointer: 2 },
-        { name: "bmp", pointer: 2 }
+        { name: "jpg", pointer: 2, type: "button" },
+        { name: "png", pointer: 2, type: "button" },
+        { name: "bmp", pointer: 2, type: "button" }
       ]
     },
     {
       name: "Resize",
       route: "resize",
       params: [
-        { name: "width", pointer: 2 },
-        { name: "height", pointer: 3 },
-        { name: "persentage", pointer: 4 }
+        { name: "width", pointer: 2, type: "input" },
+        { name: "height", pointer: 3, type: "input" },
+        { name: "persentage", pointer: 4, type: "input" }
       ]
     }
   ],
@@ -33,15 +33,15 @@ export default {
       name: "Compress",
       route: "compress",
       params: [
-        { name: "max", pointer: 2 },
-        { name: "normal", pointer: 2 },
-        { name: "min", pointer: 2 }
+        { name: "max", pointer: 2, type: "button" },
+        { name: "normal", pointer: 2, type: "button" },
+        { name: "min", pointer: 2, type: "button" }
       ]
     },
     {
       name: "Split",
       route: "split",
-      params: [{ name: "from", pointer: 2 }, { name: "to", pointer: 3 }]
+      params: [{ name: "from", pointer: 2, type: "input" }, { name: "to", pointer: 3, type: "input" }]
     }
   ]
 }

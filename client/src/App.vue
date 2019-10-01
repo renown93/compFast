@@ -30,6 +30,8 @@ export default {
 @import "@/scss/_mixins";
 #app {
   margin: 0, auto;
+  width: 100%;
+  height: 100%;
 }
 .logo {
   margin-left: 1rem;
@@ -42,6 +44,7 @@ export default {
   height: 10%;
   background-color: $main-color;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
   padding-top: 1rem;
   padding-bottom: 0.5rem;

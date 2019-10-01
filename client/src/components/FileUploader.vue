@@ -2,13 +2,13 @@
   <div class="container">
     <!-- actual form that holds the data -->
     <form method="post" hidden="true" enctype="multipart/form-data">
-      <input type="file" ref="actualForm" v-on:change="handleFileUpload()" />
+      <input type="file" ref="actualForm" @change="handleFileUpload" />
     </form>
 
     <!-- Styled fake form that invokes actual form's functions. -->
     <div class="visibleForm card">
       <div class="file-name">
-        <h5>{{fileName}}</h5>
+        <h5>{{getfileName}}</h5>
         <div v-if="ifFileUploaded" @click="handleFileDelete" class="clear-icon">
           <ClearIcon fillColor="#d2222d" />
         </div>
@@ -17,9 +17,10 @@
         <UploadIcon fillColor="#FFFFFF" :size="30" />
       </button>
     </div>
-    <div v-bind="fileType" v-if="errorCheck" class="warning">
+
+    <!-- <div v-bind="fileType" v-if="errorCheck" class="warning">
       <p :key="err" v-for="err in fileType">*{{fileType.err}}</p>
-    </div>
+    </div>-->
     <!-- / -->
   </div>
 </template>
@@ -34,19 +35,14 @@ export default {
   name: "FileUploader",
   components: { UploadIcon, ClearIcon },
   methods: {
-    ...mapActions(["fileUpload", "pushError", "deleteFile", "mutateParam"]),
+    ...mapActions(["fileUpload", "fileType", "deleteFile"]),
     handleFileUpload() {
+      console.log(this.$refs.actualForm.files[0]);
       this.fileUpload({
         fileName: this.$refs.actualForm.files[0].name,
         formObject: this.$refs.actualForm.files[0]
       });
-
-      if (!this.fileType.err) this.$router.push(this.fileType);
-      else this.pushError(this.fileType.err);
-
-      // each operation mutates a parameter to the state in order to -
-      // save route information of the backend API
-      this.mutateParam({ value: this.fileType, index: 0 });
+      // this.mutateParam({ value: this.fileType, index: 0 });
       //   let formData = new FormData();
       //   formData.append("newFile", this.form);
       //   axios
@@ -65,14 +61,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["fileName", "fileType"]),
-    errorCheck() {
-      return (
-        this.fileName !== "Select a document to start" && this.fileType.err
-      );
-    },
+    ...mapGetters(["getfileName"]),
     ifFileUploaded() {
-      return this.fileName !== "Select a document to start";
+      return this.getfileName !== "Select a document to start";
     }
   }
 };
@@ -81,53 +72,92 @@ export default {
 <style lang="scss" scoped>
 @import "@/scss/_variables";
 @import "@/scss/_mixins";
-
 .container {
-  margin: 0 auto;
-  margin-top: 8rem;
-  width: 100%;
-  min-width: 30rem;
-  font-family: $secondary-font;
-  color: $info-text-color;
-  font-size: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   @include for-phone-only {
-    margin-top: 3rem;
-    min-width: 20rem;
-    font-size: 0.7rem;
+    width: 90%;
+  }
+  @include for-tablet-portrait-up {
+    width: 60%;
+  }
+  @include for-tablet-landscape-up {
+    width: 50%;
+  }
+  @include for-desktop-up {
+    width: 32%;
   }
 }
 .visibleForm {
-  display: flex;
-  align-items: center;
-  justify-items: space-around;
-  padding: 0.21rem;
-  padding-left: 3rem;
-  height: 3.5rem;
-  border-radius: 2rem;
-  margin: 0 auto;
-  min-width: 35%;
   @include for-phone-only {
-    height: 2.5rem;
-    min-width: 15rem;
-    // margin-left: 5px;
+    font-size: 0.7rem;
   }
+  @include for-tablet-portrait-up {
+    font-size: 1rem;
+  }
+  @include for-tablet-landscape-up {
+    font-size: 1.5rem;
+  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.3rem;
+  padding-left: 2rem;
+  border-radius: 3rem;
+  font-family: $secondary-font;
+  color: $info-text-color;
   .file-name {
     display: flex;
-    .clear-icon {
-      margin-left: 2px;
-      visibility: hidden;
-    }
-    &:hover {
-      .clear-icon {
-        margin-left: 2px;
-        visibility: visible;
-      }
+    align-items: center;
+    width: 100%;
+    @include for-phone-only {
+      justify-content: center;
     }
   }
 }
+.warning {
+  text-align: center;
+  color: $warning-text-color;
+  font-family: $main-font;
+  margin-top: 1rem;
+}
+// .container {
+//   margin: 0 auto;
+//   margin-top: 7rem;
+//   width: 100%;
+//   min-width: 30rem;
+//   font-family: $secondary-font;
+//   color: $info-text-color;
+//   font-size: 1.5rem;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   @include for-phone-only {
+//     margin-top: 3rem;
+//     min-width: 20rem;
+//     font-size: 0.7rem;
+//   }
+// }
+// .visibleForm {
+//   display: flex;
+//   align-items: center;
+//   justify-items: space-around;
+//   padding: 0.21rem;
+//   padding-left: 3rem;
+//   height: 3.5rem;
+//   border-radius: 2rem;
+//   margin: 0 auto;
+//   min-width: 35%;
+//   @include for-phone-only {
+//     height: 2.5rem;
+//     min-width: 15rem;
+//     // margin-left: 5px;
+//   }
+//   .file-name {
+//     display: flex;
+//     .clear-icon {
+//       margin-left: 2px;
+//     }
+//   }
+// }
 .upload-button {
   &:focus {
     outline: none;
@@ -144,10 +174,10 @@ export default {
     width: 4rem;
   }
 }
-.warning {
-  margin-top: 1rem;
-  p {
-    color: $warning-text-color;
-  }
-}
+// .warning {
+//   margin-top: 1rem;
+//   p {
+//     color: $warning-text-color;
+//   }
+// }
 </style>

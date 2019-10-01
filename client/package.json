@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
+    "pug-plain-loader": "^1.0.0",
     "vue": "^2.6.10",
     "vue-material-design-icons": "^4.1.0",
     "vue-router": "^3.0.3",
@@ -26,6 +27,8 @@
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.9.0",
     "prettier": "^1.18.2",
+    "pug": "^2.0.4",
+    "pug-loader": "^2.4.0",
     "sass": "^1.22.12",
     "sass-loader": "^7.3.1",
     "style-resources-loader": "^1.2.1",

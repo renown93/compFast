@@ -1,13 +1,28 @@
 import Vue from "vue"
 import Vuex from "vuex"
-import functions from "@/utils/functions.js"
+import * as functions from "@/utils/functions.js"
 import operations from "@/utils/operations.js"
 
 Vue.use(Vuex)
-const { checkDocType, generateFileName, reduceOperations, eraseDuplicates, pipe } = functions
+const {
+  generateFileName,
+  generateChildOperations,
+  generateOperations,
+  findFileType,
+  generateInitialOperations,
+  json
+} = functions
 
 export default new Vuex.Store({
-  state: { fileName: "", formObject: null, err: [], params: [], operations },
+  state: {
+    fileName: "",
+    fileType: "",
+    formObject: {},
+    err: [],
+    params: ["", "", "", "", ""],
+    operations,
+    childOperations: []
+  },
   mutations: {
     FILE_NAME(state, value) {
       state.fileName = value
@@ -19,16 +34,26 @@ export default new Vuex.Store({
       state.err = value
     },
     MUTATE_PARAMS(state, { value, index }) {
-      state.params[index] = value
+      const newParams = [...state.params]
+      newParams[index] = value
+      state.params = newParams
     },
     DELETE_PARAMS(state) {
       state.params = []
+    },
+    FILE_TYPE(state, value) {
+      state.fileType = value
+    },
+    CHILD_OPERATIONS(state, value) {
+      state.childOperations = value
     }
   },
   actions: {
     fileUpload({ commit }, { fileName, formObject }) {
       commit("FILE_NAME", fileName)
       commit("FORM_OBJECT", formObject)
+      commit("FILE_TYPE", findFileType(fileName))
+      commit("MUTATE_PARAMS", { value: findFileType(fileName), index: 0 })
     },
     pushError({ commit }, err) {
       commit("ERROR", err)
@@ -37,18 +62,25 @@ export default new Vuex.Store({
       commit("FILE_NAME", "")
       commit("FORM_OBJECT", null)
       commit("DELETE_PARAMS")
+      commit("FILE_TYPE", "")
       commit("ERROR", [])
     },
     mutateParam({ commit }, { value, index }) {
       commit("MUTATE_PARAMS", { value, index })
+    },
+    mutateChildOperations({ getters, commit }) {
+      const childOperations = getters.getOperations.filter(op => op.route === getters.getParams[1])[0].params
+      commit("CHILD_OPERATIONS", childOperations)
     }
   },
   getters: {
-    fileName: ({ fileName }) => generateFileName(fileName, 15),
-    fileType: ({ fileName }) => checkDocType(fileName),
-    formObject: state => state.formObject,
-    operations: ({ fileName, operations }) => operations[checkDocType(fileName)],
-    // prettier-ignore
-    initialOperations: ({ operations }) => pipe(reduceOperations, eraseDuplicates)(operations)
+    getfileName: ({ fileName }) => generateFileName(fileName, 15),
+    getfileType: ({ fileType }) => fileType,
+    getFormObject: state => state.formObject,
+    getOperations: ({ fileType, operations }) => generateOperations(fileType, json(operations)),
+    getChildOperations: ({ childOperations }) => childOperations,
+    getParams: ({ params }) => params,
+    getInitialOperations: ({ operations }) => generateInitialOperations(operations),
+    isReadyToProcess: ({ params }) => !(params[0] && params[1] && params[2] ? true : false)
   }
 })
