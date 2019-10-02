@@ -1,30 +1,24 @@
-<template>
-  <div class="container">
-    <!-- actual form that holds the data -->
-    <form method="post" hidden="true" enctype="multipart/form-data">
-      <input type="file" ref="actualForm" @change="handleFileUpload" />
-    </form>
+<template lang="pug">
+.container
+  //- Actual form that holds the data
+  form(method="post" hidden="true" enctype="multipart/form-data")
+    input( type="file" ref="actualForm" @change="handleFileUpload")
+  //- Visual form that invokes actual form
+  .visibleForm.card
+    .file-name
+      h5 {{getfileName}}
+      .clear-icon
+        ClearIcon(v-if="ifFileUploaded"
+        @click="handleFileDelete"
+        fillColor="#d2222d")
+    button.upload-button.card(@click="handleClick")
+      UploadIcon(fillColor="#FFFFFF"
+      :size="30") 
+  .info
+    p(v-if="getfileName === 'Select a document to start'") * Please Upload The File To Continue.
+  .warning(v-if="err !== []")
+    p(:key="error" v-for="error in err") *{{error}}
 
-    <!-- Styled fake form that invokes actual form's functions. -->
-    <div class="visibleForm card">
-      <div class="file-name">
-        <h5>{{getfileName}}</h5>
-        <div v-if="ifFileUploaded" @click="handleFileDelete" class="clear-icon">
-          <ClearIcon fillColor="#d2222d" />
-        </div>
-      </div>
-      <button @click="handleClick" class="upload-button card">
-        <UploadIcon fillColor="#FFFFFF" :size="30" />
-      </button>
-    </div>
-    <div class="info">
-      <p v-if="getfileName === 'Select a document to start'">* Please Upload The File To Continue.</p>
-    </div>
-    <div v-if="err !== []" class="warning">
-      <p :key="error" v-for="error in err">*{{error}}</p>
-    </div>
-    <!-- / -->
-  </div>
 </template>
 
 <script>
@@ -39,7 +33,6 @@ export default {
   methods: {
     ...mapActions(["fileUpload", "fileType", "deleteFile"]),
     handleFileUpload() {
-      console.log(this.$refs.actualForm.files[0]);
       this.fileUpload({
         fileName: this.$refs.actualForm.files[0].name,
         formObject: this.$refs.actualForm.files[0]
@@ -133,45 +126,6 @@ export default {
     font-size: 0.8rem;
   }
 }
-// .container {
-//   margin: 0 auto;
-//   margin-top: 7rem;
-//   width: 100%;
-//   min-width: 30rem;
-//   font-family: $secondary-font;
-//   color: $info-text-color;
-//   font-size: 1.5rem;
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   @include for-phone-only {
-//     margin-top: 3rem;
-//     min-width: 20rem;
-//     font-size: 0.7rem;
-//   }
-// }
-// .visibleForm {
-//   display: flex;
-//   align-items: center;
-//   justify-items: space-around;
-//   padding: 0.21rem;
-//   padding-left: 3rem;
-//   height: 3.5rem;
-//   border-radius: 2rem;
-//   margin: 0 auto;
-//   min-width: 35%;
-//   @include for-phone-only {
-//     height: 2.5rem;
-//     min-width: 15rem;
-//     // margin-left: 5px;
-//   }
-//   .file-name {
-//     display: flex;
-//     .clear-icon {
-//       margin-left: 2px;
-//     }
-//   }
-// }
 .upload-button {
   &:focus {
     outline: none;
@@ -188,10 +142,4 @@ export default {
     width: 4rem;
   }
 }
-// .warning {
-//   margin-top: 1rem;
-//   p {
-//     color: $warning-text-color;
-//   }
-// }
 </style>
