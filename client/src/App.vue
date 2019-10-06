@@ -8,21 +8,7 @@
       router-link(to='/about')
         InfoIcon(:size="40" fillColor="#FFFFFF")
   router-view
-  //- <div id="app">
-  //-   <div class="nav card-2">
-  //-     <router-link to="/">
-  //-       <div class="logo">
-  //-         <Logo />
-  //-       </div>
-  //-     </router-link>
-  //-     <div class="icon">
-  //-       <router-link to="/about">
-  //-         <InfoIcon :size="40" fillColor="#FFFFFF" />
-  //-       </router-link>
-  //-     </div>
-  //-   </div>
-  //-   <router-view />
-  //- </div>
+  
 </template>
 <script>
 import Logo from "@/assets/Logo";
@@ -50,7 +36,6 @@ export default {
 }
 .nav {
   width: 100%;
-  // height: 10%;
   background-color: $main-color;
   display: flex;
   justify-content: flex-start;

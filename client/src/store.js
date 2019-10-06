@@ -4,14 +4,7 @@ import * as functions from "@/utils/functions.js"
 import operations from "@/utils/operations.js"
 
 Vue.use(Vuex)
-const {
-  generateFileName,
-  generateOperations,
-  findFileType,
-  generateInitialOperations,
-  json,
-  isFileValid
-} = functions
+const { generateFileName, generateOperations, findFileType, generateInitialOperations, isFileValid } = functions
 
 export default new Vuex.Store({
   state: {
@@ -19,9 +12,12 @@ export default new Vuex.Store({
     fileType: "",
     formObject: {},
     err: [],
-    params: ["", "", "", "", ""],
+    processError: [],
+    params: [],
     operations,
-    childOperations: []
+    childOperations: [],
+    isBeingProcessed: false,
+    fileLink: ""
   },
   mutations: {
     FILE_NAME(state, value) {
@@ -32,6 +28,9 @@ export default new Vuex.Store({
     },
     ERROR(state, value) {
       state.err = value
+    },
+    PROCESS_ERROR(state, value) {
+      state.processError = value
     },
     MUTATE_PARAMS(state, { value, index }) {
       const newParams = [...state.params]
@@ -46,6 +45,12 @@ export default new Vuex.Store({
     },
     CHILD_OPERATIONS(state, value) {
       state.childOperations = value
+    },
+    IS_BEING_PROCESSED(state) {
+      state.isBeingProcessed = !state.isBeingProcessed
+    },
+    FILE_LINK(state, value) {
+      state.fileLink = value
     }
   },
   actions: {
@@ -61,12 +66,16 @@ export default new Vuex.Store({
     pushError({ commit }, err) {
       commit("ERROR", err)
     },
+    pushProcessError({ commit }, err) {
+      commit("PROCESS_ERROR", err)
+    },
     deleteFile({ commit }) {
       commit("FILE_NAME", "")
       commit("FORM_OBJECT", {})
       commit("DELETE_PARAMS")
       commit("FILE_TYPE", "")
       commit("ERROR", [])
+      commit("PROCESS_ERROR", [])
     },
     mutateParam({ commit }, { value, index }) {
       commit("MUTATE_PARAMS", { value, index })
@@ -74,6 +83,12 @@ export default new Vuex.Store({
     mutateChildOperations({ getters, commit }) {
       const childOperations = getters.getOperations.filter(op => op.route === getters.getParams[1])[0].params
       commit("CHILD_OPERATIONS", childOperations)
+    },
+    process({ commit }) {
+      commit("IS_BEING_PROCESSED")
+    },
+    mutateFileLink({ commit }, link) {
+      commit("FILE_LINK", link)
     }
   },
   getters: {
@@ -86,6 +101,9 @@ export default new Vuex.Store({
     getInitialOperations: ({ operations }) => generateInitialOperations(operations),
     isReadyToProcess: ({ params }) => ((params[0] && (params[1] && params[2])) || params[4] ? true : false),
     isFileValid: ({ fileName }) => isFileValid(fileName),
+    isBeingProcessed: ({ isBeingProcessed }) => isBeingProcessed,
+    getFileLink: ({ fileLink }) => fileLink,
+    getProcessError: ({ processError }) => processError,
     err: ({ err }) => err
   }
 })

@@ -2,10 +2,10 @@
     div
       .params-container(v-if='getParams[1]')
         button.button.card( 
-          :class='{ button_selected : getParams[operation.pointer] === operation.name,faded:getParams[2] }' 
-          v-for="(operation,i) in getChildOperations" :key='i' v-if="operation.type === 'button'"
-          @click="mutateParam({ value: operation.name, index: operation.pointer })"
-          )
+        :class='{ button_selected : getParams[operation.pointer] === operation.name,faded:getParams[2] }' 
+        v-for="(operation,i) in getChildOperations"
+        :key='i' v-if="operation.type === 'button'"
+        @click="mutateParam({ value: operation.name, index: operation.pointer })")
           p {{operation.name}}
         input.input.card(
         :disabled="ifInputActive(operation.pointer)"  

@@ -1,10 +1,18 @@
-version: '3'
+version: "3"
 services:
   server:
     build: ./server
     environment:
       - NODE_ENV=development
-      - PORT=5000
+      - PORT=8081
     ports:
-      - '5000:5000'
+      - "8081:8081"
+    working_dir: /app
+  client:
+    build: ./client
+    environment:
+      - NODE_ENV=development
+      - PORT=80
+    ports:
+      - "8080:80"
     working_dir: /app

@@ -37,6 +37,7 @@ export default {
         fileName: this.$refs.actualForm.files[0].name,
         formObject: this.$refs.actualForm.files[0]
       });
+      this.$router.push(`/${this.getfileType}`);
       // this.mutateParam({ value: this.fileType, index: 0 });
       //   let formData = new FormData();
       //   formData.append("newFile", this.form);
@@ -51,12 +52,12 @@ export default {
       this.$refs.actualForm.click();
     },
     handleFileDelete() {
-      // this.$router.push("/");
       this.deleteFile();
+      this.$router.push("/");
     }
   },
   computed: {
-    ...mapGetters(["getfileName", "err"]),
+    ...mapGetters(["getfileName", "err", "getfileType"]),
     ifFileUploaded() {
       return this.getfileName !== "Select a document to start";
     }

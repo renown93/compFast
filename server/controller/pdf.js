@@ -1,17 +1,17 @@
-const changePdf = require('change-pdf')
-const { savePdf } = require('../util/store')
-const { PORT, IP } = require('../util/config')
-const path = require('path')
-const hummus = require('hummus')
-const { setDelete, splitVerify, qualityParams } = require('../util/utils')
+const changePdf = require("change-pdf")
+const { savePdf } = require("../util/store")
+const { PORT, IP } = require("../util/config")
+const path = require("path")
+const hummus = require("hummus")
+const { setDelete, splitVerify, qualityParams } = require("../util/utils")
 
 exports.compress = (req, res) => {
   savePdf(req, res, err => {
     if (err) return res.status(400).json({ err })
     if (req.file == undefined)
-      return res.status(400).json({ err: 'no file is uploaded' }), setDelete(req.file.path, null)
-    if (!['max', 'normal', 'min'].includes(req.params.size))
-      return res.status(400).json({ err: 'wrong compress value' }), setDelete(req.file.path, null)
+      return res.status(400).json({ err: "no file is uploaded" }), setDelete(req.file.path, null)
+    if (!["max", "normal", "min"].includes(req.params.size))
+      return res.status(400).json({ err: "wrong compress value" }), setDelete(req.file.path, null)
 
     const { destination, filename } = req.file
     changePdf
@@ -33,7 +33,7 @@ exports.split = (req, res) => {
 
   savePdf(req, res, err => {
     if (err) return res.status(400).json({ err })
-    if (req.file == undefined) return res.status(400).json({ err: 'no file is uploaded' })
+    if (req.file == undefined) return res.status(400).json({ err: "no file is uploaded" })
 
     const { destination, filename } = req.file
     const inStream = new hummus.PDFRStreamForFile(req.file.path)
@@ -43,7 +43,7 @@ exports.split = (req, res) => {
     if (splitVerify(params)) {
       inStream.close()
       setDelete(req.file.path, null)
-      return res.status(400).json({ err: splitVerify(params) })
+      return res.status(401).send({ err: splitVerify(params) })
     }
 
     let pdfWriter = hummus.createWriter(path.join(destination, `splited-${filename}`))
@@ -59,9 +59,9 @@ exports.split = (req, res) => {
 
     setDelete(req.file.path, path.join(destination, `splited-${filename}`))
 
-    return res.status(400).json({ link: `${IP}:${PORT}/file/splited-${filename}` })
+    return res.status(200).json({ link: `${IP}:${PORT}/file/splited-${filename}` })
   })
 }
 exports.changeToImage = (req, res) => {
-  res.json({ endpoint: 'changeToImage' })
+  res.json({ endpoint: "changeToImage" })
 }

@@ -16,18 +16,18 @@
 
       ChildOperations
       
-      .process-button
-        button.button(:class='{ button_disabled : !isReadyToProcess }' ) 
-          p Process
+      Process
+
          
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import ChildOperations from "./ChildOperations";
+import Process from "./Process";
 export default {
   name: "Operations",
-  components: { ChildOperations },
+  components: { ChildOperations, Process },
   computed: {
     ...mapGetters([
       "getOperations",
@@ -108,6 +108,7 @@ operation-container {
     color: white;
     &_disabled {
       opacity: 0.4;
+      cursor: not-allowed;
     }
   }
 }
