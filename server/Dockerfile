@@ -3,7 +3,7 @@ RUN apt-get update && apt-get -y install ghostscript && apt-get clean
 WORKDIR /app
 COPY package.json /app
 RUN npm install
-EXPOSE 8081
+EXPOSE 9000
 COPY . /app
 ENTRYPOINT [ "npm" ]
 CMD ["run","start"]

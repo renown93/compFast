@@ -1,14 +1,14 @@
-const Jimp = require('jimp')
-const path = require('path')
-const { saveImg } = require('../util/store')
-const { PORT, IP } = require('../util/config')
-const { qualityParams, changeDocTypeVerify, setDelete, findResizeMethod } = require('../util/utils')
+const Jimp = require("jimp")
+const path = require("path")
+const { saveImg } = require("../util/store")
+const { IP, REVERSE_PROXY_PORT } = require("../util/config")
+const { qualityParams, changeDocTypeVerify, setDelete, findResizeMethod } = require("../util/utils")
 
 exports.compress = (req, res) => {
   const { size } = req.params
   saveImg(req, res, err => {
     if (err) return res.json({ err })
-    if (req.file == undefined) return res.status(400).json({ err: 'no file is uploaded' })
+    if (req.file == undefined) return res.status(400).json({ err: "no file is uploaded" })
 
     const { destination, filename, fileType } = req.file
     const newFileName = `comped${filename}`
@@ -17,7 +17,7 @@ exports.compress = (req, res) => {
       .then(image => {
         const { width, height } = image.bitmap
 
-        if (fileType === '.png') {
+        if (fileType === ".png") {
           return image
             .resize(width * qualityParams[size].png, Jimp.AUTO)
             .write(path.join(destination, newFileName))
@@ -28,7 +28,7 @@ exports.compress = (req, res) => {
       .then(() => {
         setDelete(req.file.path, path.join(destination, newFileName))
         //setdelete
-        return res.status(200).json({ link: `${IP}:${PORT}/file/comped${filename}` })
+        return res.status(200).json({ link: `${IP}:${REVERSE_PROXY_PORT}/api/file/comped${filename}` })
       })
       .catch(err => console.log(err))
   })
@@ -49,7 +49,7 @@ exports.changeDocType = (req, res) => {
       .then(() => {
         setDelete(req.file.path, path.join(destination, newFileName))
         return res.status(200).json({
-          link: `${IP}:${PORT}/file/${newFileName}`
+          link: `${IP}:${REVERSE_PROXY_PORT}/api/file/${newFileName}`
         })
       })
       .catch(err => console.log(err))
@@ -58,7 +58,7 @@ exports.changeDocType = (req, res) => {
 exports.resize = (req, res) => {
   saveImg(req, res, err => {
     if (err) return res.json({ err })
-    if (req.file == undefined) return res.status(400).json({ err: 'no file is uploaded' })
+    if (req.file == undefined) return res.status(400).json({ err: "no file is uploaded" })
     //setdelete
     const { destination, filename } = req.file
 
@@ -81,7 +81,7 @@ exports.resize = (req, res) => {
       })
       .then(() => {
         setDelete(req.file.path, path.join(destination, `resized_${filename}`))
-        return res.status(200).json({ link: `${IP}:${PORT}/file/resized_${filename}` })
+        return res.status(200).json({ link: `${IP}:${REVERSE_PROXY_PORT}/api/file/resized_${filename}` })
       })
       .catch(err => console.log(err))
   })

@@ -32,7 +32,7 @@ export const stringifyParams = arr =>
       }
 
       return acc
-    }, "http://localhost:8081")
+    }, "http://localhost:9000/api")
 
 export const json = obj => JSON.parse(JSON.stringify(obj))
 export const eraseDuplicates = arr => {

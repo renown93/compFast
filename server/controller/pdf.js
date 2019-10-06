@@ -1,6 +1,6 @@
 const changePdf = require("change-pdf")
 const { savePdf } = require("../util/store")
-const { PORT, IP } = require("../util/config")
+const { IP, REVERSE_PROXY_PORT } = require("../util/config")
 const path = require("path")
 const hummus = require("hummus")
 const { setDelete, splitVerify, qualityParams } = require("../util/utils")
@@ -25,7 +25,7 @@ exports.compress = (req, res) => {
         setDelete(req.file.path, path.join(destination, `comped${filename}`))
       })
       .catch(err => console.log(err))
-    return res.status(200).json({ link: `${IP}:${PORT}/file/comped${filename}` })
+    return res.status(200).json({ link: `${IP}:${REVERSE_PROXY_PORT}/api/file/comped${filename}` })
   })
 }
 exports.split = (req, res) => {
@@ -59,7 +59,7 @@ exports.split = (req, res) => {
 
     setDelete(req.file.path, path.join(destination, `splited-${filename}`))
 
-    return res.status(200).json({ link: `${IP}:${PORT}/file/splited-${filename}` })
+    return res.status(200).json({ link: `${IP}:${REVERSE_PROXY_PORT}/api/file/splited-${filename}` })
   })
 }
 exports.changeToImage = (req, res) => {

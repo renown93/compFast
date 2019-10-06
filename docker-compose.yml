@@ -1,18 +1,42 @@
-version: "3"
+version: "2"
+
 services:
+  reverseproxy:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 9000:9000
+    restart: always
+
   server:
     build: ./server
     environment:
       - NODE_ENV=development
       - PORT=8081
-    ports:
-      - "8081:8081"
+      - REVERSE_PROXY_PORT=9000
     working_dir: /app
   client:
     build: ./client
     environment:
       - NODE_ENV=development
       - PORT=80
-    ports:
-      - "8080:80"
     working_dir: /app
+# version: "3"
+# services:
+#   server:
+#     build: ./server
+#     environment:
+#       - NODE_ENV=development
+#       - PORT=8081
+#     ports:
+#       - "8081:8081"
+#     working_dir: /app
+#   client:
+#     build: ./client
+#     environment:
+#       - NODE_ENV=development
+#       - PORT=80
+#     ports:
+#       - "8080:80"
+#     working_dir: /app
