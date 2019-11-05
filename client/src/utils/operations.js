@@ -4,9 +4,26 @@ export default {
       name: "Compress",
       route: "compress",
       params: [
-        { name: "max", pointer: 2, type: "button" },
-        { name: "normal", pointer: 2, type: "button" },
-        { name: "min", pointer: 2, type: "button" }
+        {
+          name: "max",
+          pointer: 2,
+          type: "button",
+          title:
+            "For maximum compress to get the smallest file size possible(Effects the quality)."
+        },
+        {
+          name: "normal",
+          pointer: 2,
+          type: "button",
+          title: "For avarage compress to get a bigger file size."
+        },
+        {
+          name: "min",
+          pointer: 2,
+          type: "button",
+          title:
+            "For minumum compress.Best for situations when you need a photo with better quality."
+        }
       ]
     },
     {
@@ -41,7 +58,10 @@ export default {
     {
       name: "Split",
       route: "split",
-      params: [{ name: "from", pointer: 2, type: "input" }, { name: "to", pointer: 3, type: "input" }]
+      params: [
+        { name: "from", pointer: 2, type: "input" },
+        { name: "to", pointer: 3, type: "input" }
+      ]
     }
   ]
 }

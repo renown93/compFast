@@ -4,7 +4,13 @@ import * as functions from "@/utils/functions.js"
 import operations from "@/utils/operations.js"
 
 Vue.use(Vuex)
-const { generateFileName, generateOperations, findFileType, generateInitialOperations, isFileValid } = functions
+const {
+  generateFileName,
+  generateOperations,
+  findFileType,
+  generateInitialOperations,
+  isFileValid
+} = functions
 
 export default new Vuex.Store({
   state: {
@@ -57,10 +63,14 @@ export default new Vuex.Store({
     fileUpload({ commit }, { fileName, formObject }) {
       commit("FILE_NAME", fileName)
       commit("DELETE_PARAMS")
-      if (!isFileValid(fileName)) return commit("ERROR", ["Unsupported Document Type."])
+      if (!isFileValid(fileName))
+        return commit("ERROR", ["Unsupported Document Type."])
       commit("FORM_OBJECT", formObject)
       commit("FILE_TYPE", findFileType(fileName))
-      commit("MUTATE_PARAMS", { value: findFileType(fileName), index: 0 })
+      commit("MUTATE_PARAMS", {
+        value: findFileType(fileName),
+        index: 0
+      })
       commit("ERROR", [])
     },
     pushError({ commit }, err) {
@@ -81,7 +91,9 @@ export default new Vuex.Store({
       commit("MUTATE_PARAMS", { value, index })
     },
     mutateChildOperations({ getters, commit }) {
-      const childOperations = getters.getOperations.filter(op => op.route === getters.getParams[1])[0].params
+      const childOperations = getters.getOperations.filter(
+        op => op.route === getters.getParams[1]
+      )[0].params
       commit("CHILD_OPERATIONS", childOperations)
     },
     process({ commit }) {
@@ -93,13 +105,19 @@ export default new Vuex.Store({
   },
   getters: {
     getfileName: ({ fileName }) => generateFileName(fileName, 15),
+    getFullFileName: ({ fileName }) => fileName,
     getfileType: ({ fileType }) => fileType,
     getFormObject: state => state.formObject,
-    getOperations: ({ fileType, operations }) => generateOperations(fileType, operations),
+    getOperations: ({ fileType, operations }) =>
+      generateOperations(fileType, operations),
     getChildOperations: ({ childOperations }) => childOperations,
     getParams: ({ params }) => params,
-    getInitialOperations: ({ operations }) => generateInitialOperations(operations),
-    isReadyToProcess: ({ params }) => ((params[0] && (params[1] && params[2])) || params[4] ? true : false),
+    getInitialOperations: ({ operations }) =>
+      generateInitialOperations(operations),
+    isReadyToProcess: ({ params }) =>
+      (params[0] && (params[1] && params[2])) || params[4]
+        ? true
+        : false,
     isFileValid: ({ fileName }) => isFileValid(fileName),
     isBeingProcessed: ({ isBeingProcessed }) => isBeingProcessed,
     getFileLink: ({ fileLink }) => fileLink,

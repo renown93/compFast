@@ -6,7 +6,8 @@
   //- Visual form that invokes actual form
   .visibleForm.card
     .file-name
-      h5 {{getfileName}}
+      h5( v-if='!ifFileUploaded' @click="handleClick") {{getfileName}}
+      h5( v-else) {{getfileName}}
       .clear-icon
         ClearIcon(v-if="ifFileUploaded"
         @click="handleFileDelete"
@@ -15,7 +16,7 @@
       UploadIcon(fillColor="#FFFFFF"
       :size="30") 
   .info
-    p(v-if="getfileName === 'Select a document to start'") * Please Upload The File To Continue.
+    p(v-if="getfileName === 'Select a document to start'" ) * Please Upload The File To Continue.
   .warning(v-if="err !== []")
     p(:key="error" v-for="error in err") *{{error}}
 

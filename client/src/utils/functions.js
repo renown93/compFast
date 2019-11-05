@@ -32,7 +32,7 @@ export const stringifyParams = arr =>
       }
 
       return acc
-    }, "http://localhost:9000/api")
+    }, `http://${window.location.hostname}:${window.location.port}/api`)
 
 export const json = obj => JSON.parse(JSON.stringify(obj))
 export const eraseDuplicates = arr => {
@@ -43,13 +43,15 @@ export const eraseDuplicates = arr => {
     return acc
   }, [])
 }
-export const pipe = (...fns) => x => fns.reduce((v, f) => f(v), JSON.parse(JSON.stringify(x)))
+export const pipe = (...fns) => x =>
+  fns.reduce((v, f) => f(v), JSON.parse(JSON.stringify(x)))
 
 // ------------------ Generator Functions ------------------ //
 export const generateFileName = (fileName, maxLength) => {
   const { length } = fileName.split("")
 
-  if (length > maxLength) return (fileName = `${fileName.slice(0, 15)}...`)
+  if (length > maxLength)
+    return (fileName = `${fileName.slice(0, 15)}...`)
   if (fileName === "") return "Select a document to start"
   return fileName
 }
@@ -58,21 +60,25 @@ export const generateChildOperations = (operatiosn, params) => {
   return operations[fileType]
 }
 
-export const generateOperations = (fileType, operations) => operations[fileType]
+export const generateOperations = (fileType, operations) =>
+  operations[fileType]
 
 export const findFileType = fileName => findDocType(fileName)
-export const isFileValid = fileName => (findDocType(fileName) === "Unsupported document type." ? false : true)
+export const isFileValid = fileName =>
+  findDocType(fileName) === "Unsupported document type."
+    ? false
+    : true
 
 export const generateInitialOperations = operations =>
   pipe(
     reduceOperations,
     eraseDuplicates
   )(operations)
-export const forceFileDownload = response => {
+export const forceFileDownload = (response, fileName) => {
   const url = window.URL.createObjectURL(new Blob([response.data]))
   const link = document.createElement("a")
   link.href = url
-  link.setAttribute("download", "file.png") //or any other extension
+  link.setAttribute("download", fileName) //or any other extension
   document.body.appendChild(link)
   link.click()
 }

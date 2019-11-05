@@ -6,7 +6,7 @@
         v-for="(operation,i) in getChildOperations"
         :key='i' v-if="operation.type === 'button'"
         @click="mutateParam({ value: operation.name, index: operation.pointer })")
-          p {{operation.name}}
+          p(:title="operation.title" ) {{operation.name}}
         input.input.card(
         :disabled="ifInputActive(operation.pointer)"  
         v-else-if="operation.type === 'input'" 
@@ -15,7 +15,7 @@
         :name='operation.pointer' 
         @input='handleInput')
       .info
-        p(v-if="checkParamType('compress')") *Please choose the strength of the operation to continue.
+        p(v-if="checkParamType('compress')") *Please choose the strength of the operation to continue.<br/>*Select 'max' for smallest file size possible.
         p(v-else-if="checkParamType('changeDocType')") *Please choose the file type to change it to.
         p(v-else-if="checkParamType('resize') ") *Please fill in the size to continue. <br> *You can choose either percentage or width/height(pixel). 
         p(v-else-if="checkParamType('split')") *Please choose the page range to split.         
@@ -155,6 +155,7 @@ operation-container {
   color: $info-text-color;
   font-family: $main-font;
   font-size: 1rem;
+  line-height: 1.5rem;
   margin: 1rem;
   @include for-phone-only {
     font-size: 0.8rem;

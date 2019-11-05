@@ -23,7 +23,7 @@ export default {
 @import "@/scss/main";
 @import "@/scss/_variables";
 @import "@/scss/_mixins";
-#app {
+.app {
   margin: 0, auto;
   width: 100%;
   height: 100%;

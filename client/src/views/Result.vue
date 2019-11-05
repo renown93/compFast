@@ -6,7 +6,7 @@ div
     button.button( v-on:click='handleViewFile')
       Search  
       p View
-    button.button
+    button.button( v-if=" getfileType === 'image' " v-on:click='download' )
       Download
       p Download
   .info
@@ -14,7 +14,7 @@ div
   .back-buttons
     button.button(v-on:click='handleBack')
       BackArrow(:size="40")
-    button.button(v-on:click='handleReset')
+    button.button( v-on:click='handleReset')
       Restart(:size="40" )
   .secondary-banner
     p ☕
@@ -39,7 +39,13 @@ export default {
   name: "Result",
   components: { Search, Download, BackArrow, Restart },
   computed: {
-    ...mapGetters(["getChildOperations", "getParams", "getFileLink"])
+    ...mapGetters([
+      "getChildOperations",
+      "getParams",
+      "getFileLink",
+      "getfileType",
+      "getFullFileName"
+    ])
   },
   methods: {
     ...mapActions(["deleteFile"]),
@@ -49,11 +55,11 @@ export default {
     download() {
       axios({
         method: "get",
-        url: this.url,
+        url: this.getFileLink,
         responseType: "arraybuffer"
       })
         .then(response => {
-          forceFileDownload(response);
+          forceFileDownload(response, this.getFullFileName);
         })
         .catch(() => console.log("error occured"));
     },
