@@ -1,7 +1,7 @@
 const Jimp = require("jimp")
 const path = require("path")
 const { saveImg } = require("../util/store")
-const { IP, REVERSE_PROXY_PORT } = require("../util/config")
+const { IP, REVERSE_PROXY_PORT, DOMAIN } = require("../util/config")
 const {
   qualityParams,
   changeDocTypeVerify,
@@ -37,7 +37,7 @@ exports.compress = (req, res) => {
         setDelete(req.file.path, path.join(destination, newFileName))
         //setdelete
         return res.status(200).json({
-          link: `${IP}:${REVERSE_PROXY_PORT}/api/file/comped${filename}`
+          link: `${DOMAIN}/api/file/comped${filename}`
         })
       })
       .catch(err => console.log(err))
@@ -63,7 +63,7 @@ exports.changeDocType = (req, res) => {
       .then(() => {
         setDelete(req.file.path, path.join(destination, newFileName))
         return res.status(200).json({
-          link: `${IP}:${REVERSE_PROXY_PORT}/api/file/${newFileName}`
+          link: `${DOMAIN}/api/file/${newFileName}`
         })
       })
       .catch(err => console.log(err))
@@ -106,7 +106,7 @@ exports.resize = (req, res) => {
           path.join(destination, `resized_${filename}`)
         )
         return res.status(200).json({
-          link: `${IP}:${REVERSE_PROXY_PORT}/api/file/resized_${filename}`
+          link: `${DOMAIN}/api/file/resized_${filename}`
         })
       })
       .catch(err => console.log(err))

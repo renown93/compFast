@@ -1,6 +1,6 @@
 const changePdf = require("change-pdf")
 const { savePdf } = require("../util/store")
-const { IP, REVERSE_PROXY_PORT } = require("../util/config")
+const { IP, REVERSE_PROXY_PORT, DOMAIN } = require("../util/config")
 const path = require("path")
 const hummus = require("hummus")
 const {
@@ -39,7 +39,7 @@ exports.compress = (req, res) => {
       })
       .catch(err => console.log(err))
     return res.status(200).json({
-      link: `${IP}:${REVERSE_PROXY_PORT}/api/file/comped${filename}`
+      link: `${DOMAIN}/api/file/comped${filename}`
     })
   })
 }
@@ -87,7 +87,7 @@ exports.split = (req, res) => {
     )
 
     return res.status(200).json({
-      link: `${IP}:${REVERSE_PROXY_PORT}/api/file/splited-${filename}`
+      link: `${DOMAIN}/api/file/splited-${filename}`
     })
   })
 }
