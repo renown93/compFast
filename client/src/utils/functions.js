@@ -32,7 +32,7 @@ export const stringifyParams = arr =>
       }
 
       return acc
-    }, `http://${window.location.hostname}:${window.location.port}/api`)
+    }, `https://${window.location.hostname}:${window.location.port}/api`)
 
 export const json = obj => JSON.parse(JSON.stringify(obj))
 export const eraseDuplicates = arr => {
