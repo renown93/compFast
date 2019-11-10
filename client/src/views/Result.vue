@@ -59,7 +59,7 @@ export default {
         responseType: "arraybuffer"
       })
         .then(response => {
-          forceFileDownload(response, this.getFullFileName);
+          forceFileDownload(response, `https://${this.getFullFileName}`);
         })
         .catch(() => console.log("error occured"));
     },
