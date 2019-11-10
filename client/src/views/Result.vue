@@ -42,20 +42,21 @@ export default {
     ...mapGetters([
       "getChildOperations",
       "getParams",
-      "getFileLink",
+      "getFileViewLink",
       "getfileType",
+      "getFileDownloadLink",
       "getFullFileName"
     ])
   },
   methods: {
     ...mapActions(["deleteFile"]),
     handleViewFile() {
-      window.open(`https://${this.getFileLink}`, "_blank");
+      window.open(`https://${this.getFileViewLink}`, "_blank");
     },
     download() {
       axios({
         method: "get",
-        url: `https://${this.getFileLink}`,
+        url: `https://${this.getFileDownloadLink}`,
         responseType: "arraybuffer"
       })
         .then(response => {
