@@ -53,7 +53,7 @@ export default {
         })
         .then(res => {
           this.process();
-          this.mutateFileLink(`http://${res.data.link}`);
+          this.mutateFileLink(`${res.data.link}`);
           this.$router.push(`/result`);
         })
         .catch(error => {
