@@ -23,7 +23,8 @@ export default new Vuex.Store({
     operations,
     childOperations: [],
     isBeingProcessed: false,
-    fileLink: ""
+    fileViewLink: "",
+    fileDownloadLink: ""
   },
   mutations: {
     FILE_NAME(state, value) {
@@ -55,8 +56,11 @@ export default new Vuex.Store({
     IS_BEING_PROCESSED(state) {
       state.isBeingProcessed = !state.isBeingProcessed
     },
-    FILE_LINK(state, value) {
-      state.fileLink = value
+    FILE_VIEW_LINK(state, value) {
+      state.fileViewLink = value
+    },
+    FILE_DOWNLOAD_LINK(state, value) {
+      state.fileDownloadLink = value
     }
   },
   actions: {
@@ -99,8 +103,11 @@ export default new Vuex.Store({
     process({ commit }) {
       commit("IS_BEING_PROCESSED")
     },
-    mutateFileLink({ commit }, link) {
-      commit("FILE_LINK", link)
+    mutateFileDownloadLink({ commit }, link) {
+      commit("FILE_DOWNLOAD_LINK", link)
+    },
+    mutateFileViewLink({ commit }, link) {
+      commit("FILE_VIEW_LINK", link)
     }
   },
   getters: {
@@ -120,7 +127,8 @@ export default new Vuex.Store({
         : false,
     isFileValid: ({ fileName }) => isFileValid(fileName),
     isBeingProcessed: ({ isBeingProcessed }) => isBeingProcessed,
-    getFileLink: ({ fileLink }) => fileLink,
+    getFileViewLink: ({ fileViewLink }) => fileViewLink,
+    getFileDownloadLink: ({ fileDownloadLink }) => fileDownloadLink,
     getProcessError: ({ processError }) => processError,
     err: ({ err }) => err
   }

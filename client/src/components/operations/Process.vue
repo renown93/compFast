@@ -37,7 +37,8 @@ export default {
       "mutateParam",
       "mutateChildOperations",
       "process",
-      "mutateFileLink",
+      "mutateFileDownloadLink",
+      "mutateFileViewLink",
       "pushProcessError"
     ]),
     handleSubmit: function() {
@@ -53,7 +54,8 @@ export default {
         })
         .then(res => {
           this.process();
-          this.mutateFileLink(`${res.data.link}`);
+          this.mutateFileDownloadLink(`http://${res.data.link}`);
+          this.mutateFileViewLink(`http://${res.data.link.substring(29)}`);
           this.$router.push(`/result`);
         })
         .catch(error => {
