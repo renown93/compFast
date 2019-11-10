@@ -50,7 +50,7 @@ export default {
   methods: {
     ...mapActions(["deleteFile"]),
     handleViewFile() {
-      window.open(this.getFileLink, "_blank");
+      window.open(`https://${this.getFileLink}`, "_blank");
     },
     download() {
       axios({
