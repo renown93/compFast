@@ -55,11 +55,11 @@ export default {
     download() {
       axios({
         method: "get",
-        url: this.getFileLink,
+        url: `https://${this.getFullFileName}`,
         responseType: "arraybuffer"
       })
         .then(response => {
-          forceFileDownload(response, `https://${this.getFullFileName}`);
+          forceFileDownload(response, this.getFullFileName);
         })
         .catch(() => console.log("error occured"));
     },
