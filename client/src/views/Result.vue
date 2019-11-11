@@ -44,7 +44,8 @@ export default {
       "getParams",
       "getFileLink",
       "getfileType",
-      "getFullFileName"
+      "getFullFileName",
+      "getFileDownloadLink"
     ])
   },
   methods: {
@@ -55,7 +56,7 @@ export default {
     download() {
       axios({
         method: "get",
-        url: `https://${JSON.stringify(this.getFileLink).subString(5)}`,
+        url: `https://${this.getFileDownloadLink}`,
         responseType: "arraybuffer"
       })
         .then(response => {

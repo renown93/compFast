@@ -122,6 +122,7 @@ export default new Vuex.Store({
     isBeingProcessed: ({ isBeingProcessed }) => isBeingProcessed,
     getFileLink: ({ fileLink }) => fileLink,
     getProcessError: ({ processError }) => processError,
-    err: ({ err }) => err
+    err: ({ err }) => err,
+    getFileDownloadLink: ({ fileLink }) => fileLink.substr(5)
   }
 })
