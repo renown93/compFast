@@ -55,7 +55,7 @@ export default {
     download() {
       axios({
         method: "get",
-        url: `https://${this.getFullFileName}`,
+        url: `https://${this.getFileLink}`,
         responseType: "arraybuffer"
       })
         .then(response => {
