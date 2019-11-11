@@ -62,7 +62,7 @@ export default {
         .then(response => {
           forceFileDownload(response, this.getFullFileName);
         })
-        .catch(() => console.log("error occured"));
+        .catch(err => console.log(err));
     },
     handleBack() {
       this.$router.back();
