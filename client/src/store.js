@@ -106,7 +106,7 @@ export default new Vuex.Store({
   getters: {
     getfileName: ({ fileName }) => generateFileName(fileName, 15),
     getFullFileName: ({ fileName, params }) =>
-      params[1] === changeDocType
+      params[1] === "changeDocType"
         ? fileName.substr(fileName.length - 4) + params[2]
         : fileName,
     getfileType: ({ fileType }) => fileType,
