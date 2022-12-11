@@ -22,7 +22,7 @@
     "body-parser": "^1.19.0",
     "change-pdf": "^1.0.11",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "hummus": "^1.0.105",
     "jimp": "^0.8.4",
     "multer": "^1.4.2",
